@@ -21,42 +21,43 @@ class node {
   var noEncontrado = true, limite = 0;
 
   //CALCULA LA PERCEPCION DEL AGENTE EN ALGUN ESTADO EN PARTICULAR
-  function perception(data){
-  
-    let pos = data.agent;
-    let map = data.map;
-    var feeling = [];
-  
-    if (pos[0]-1 >= 0 && map[pos[0]-1][pos[1]]!="W") {
-      if (map[pos[0]-1][pos[1]]=="B" && (map[pos[0]-2][pos[1]]=="0" || map[pos[0]-2][pos[1]]=="X")) {
-        feeling.push("PUSH-UP");
-      }else if(map[pos[0]-1][pos[1]]=="0" || map[pos[0]-1][pos[1]]=="X"){
-        feeling.push("UP");
-      }
+function perception(data){
+
+  let pos = data.agent;
+  let map = data.map;
+  var feeling = [];
+
+  if (pos[0]-1 >= 0 && map[pos[0]-1][pos[1]]!="W") {
+    if (map[pos[0]-1][pos[1]]=="B" && (map[pos[0]-2][pos[1]]=="0" || map[pos[0]-2][pos[1]]=="X")) {
+      feeling.push("PUSH-UP");
+    }else if(map[pos[0]-1][pos[1]]=="0" || map[pos[0]-1][pos[1]]=="X"){
+      feeling.push("UP");
     }
-    if(pos[1]+1 <= map[0].length-1 && map[pos[0]][pos[1]+1]!="W") {
-      if (map[pos[0]][pos[1]+1]=="B" && (map[pos[0]][pos[1]+2]=="0" || map[pos[0]][pos[1]+2]=="X")) {
-        feeling.push("PUSH-RIGHT");
-      }else if(map[pos[0]][pos[1]+1]=="0" || map[pos[0]][pos[1]+1]=="X"){
-        feeling.push("RIGHT");
-      }
-    }
-    if (pos[0]+1 <= map.length-1 && map[pos[0]+1][pos[1]]!="W") {
-      if (map[pos[0]+1][pos[1]]=="B" && (map[pos[0]+2][pos[1]]=="0" || map[pos[0]+2][pos[1]]=="X")) {
-        feeling.push("PUSH-DOWN");
-      }else if(map[pos[0]+1][pos[1]]=="0" || map[pos[0]+1][pos[1]]=="X"){
-        feeling.push("DOWN");
-      }
-    }
-    if (pos[1]-1 >= 0 && map[pos[0]][pos[1]-1]!="W") {
-      if (map[pos[0]][pos[1]-1]=="B" && (map[pos[0]][pos[1]-2]=="0" || map[pos[0]][pos[1]-2]=="X")) {
-        feeling.push("PUSH-LEFT");
-      }else if(map[pos[0]][pos[1]-1]=="0" || map[pos[0]][pos[1]-1]=="X"){
-        feeling.push("LEFT");
-      }
-    }
-    return feeling;
   }
+  if (pos[0]+1 <= map.length-1 && map[pos[0]+1][pos[1]]!="W") {
+    if (map[pos[0]+1][pos[1]]=="B" && (map[pos[0]+2][pos[1]]=="0" || map[pos[0]+2][pos[1]]=="X")) {
+      feeling.push("PUSH-DOWN");
+    }else if(map[pos[0]+1][pos[1]]=="0" || map[pos[0]+1][pos[1]]=="X"){
+      feeling.push("DOWN");
+    }
+  }
+  if (pos[1]-1 >= 0 && map[pos[0]][pos[1]-1]!="W") {
+    if (map[pos[0]][pos[1]-1]=="B" && (map[pos[0]][pos[1]-2]=="0" || map[pos[0]][pos[1]-2]=="X")) {
+      feeling.push("PUSH-LEFT");
+    }else if(map[pos[0]][pos[1]-1]=="0" || map[pos[0]][pos[1]-1]=="X"){
+      feeling.push("LEFT");
+    }
+  }
+  if(pos[1]+1 <= map[0].length-1 && map[pos[0]][pos[1]+1]!="W") {
+    if (map[pos[0]][pos[1]+1]=="B" && (map[pos[0]][pos[1]+2]=="0" || map[pos[0]][pos[1]+2]=="X")) {
+      feeling.push("PUSH-RIGHT");
+    }else if(map[pos[0]][pos[1]+1]=="0" || map[pos[0]][pos[1]+1]=="X"){
+      feeling.push("RIGHT");
+    }
+  }
+
+  return feeling;
+}
   var contar = 0;
   //REALIZA LA ACTUALIZACION DEL ESTADO DADA UNA PERCEPCION
   function update(rule, data){
@@ -226,7 +227,7 @@ class node {
         present = queue[0]; //primer elemento de la cola
         //console.log(present.data);
         if (isEqual(present.data.boxes, goals)) {
-          console.log("---- SOLVED ----");
+          //console.log("---- SOLVED ----");
           solution = new node(update("TAKE", present.data), present, present.nivel); //Guarda la "rama" solucion
           noEncontrado = false;          
           return count; //Termina el programa porque encontro solucion
@@ -318,33 +319,44 @@ class node {
      }
   
      //**************************
-     console.log("*** SOKOBAN ***");
+     /*console.log("*** SOKOBAN ***");
       console.log("---- INITAL MAP ----");
       console.log(map);
       console.log("Initial posicion: ", marvin);
       console.log("boxes: ", boxes);
-      console.log("goals: ", goals);
+      console.log("goals: ", goals);*/
 
      while(noEncontrado){
       let first_state = new statements(marvin, boxes, map, "FIRST"); //Estado inicial
       let queue = [new node(first_state, null, 0)]; //Primer elemento en la cola
       let repeats = []; //Arreglo del elementos repetidos vacio
             
-      console.log("Number of expantions: ",solver(queue, repeats, goals));
-          
-      console.log("Nivel " + limite)
+      //console.log("Number of expantions: ",solver(queue, repeats, goals));
+      solver(queue, repeats, goals)
+      //console.log("Nivel " + limite)
       limite++;
       
     }
 
-          if (solution.data==null) {
-        console.log("---- NO SOLUTION ----");
-      }else{
-        let finalRules = getInstructions();
-        for (var i = 1; i < finalRules.length; i++) {
-          console.log(i, finalRules[i]);
+   var sol = "";   
+
+   if (solution.data==null) {
+     console.log("---- NO SOLUTION ----");
+   }else{
+     let finalRules = getInstructions();
+     for (var i = 1; i < finalRules.length; i++) {
+       if(finalRules[i]=="UP" || finalRules[i]=="PUSH-UP"){
+            sol += "U";
+        }else if(finalRules[i]=="DOWN" || finalRules[i]=="PUSH-DOWN"){
+            sol += "D";
+        }else if(finalRules[i]=="LEFT" || finalRules[i]=="PUSH-LEFT"){
+            sol += "L";
+        }else if(finalRules[i]=="RIGHT" || finalRules[i]=="PUSH-RIGHT"){
+            sol += "R";
         }
-      }
+     }
+   }
+   console.log(sol);
      
   }
   
