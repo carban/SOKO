@@ -262,15 +262,17 @@ function main(){
 
    //**************************
    // PROCESANDO EL ARCHIVO
-   const fs = require("fs");
+   //const fs = require("fs");
 
-   var input = process.argv; //Recibe los inputs que le lleguen por consola
+   var splitter = process.argv; //Recibe los inputs que le lleguen por consola
 
-   var allfile = fs.readFileSync(input[2], 'utf8'); //el input en la posicion 2 corresponde al nombre del archivo
-   var splitter = allfile.split("\n");
+   //var allfile = fs.readFileSync(input[2], 'utf8'); //el input en la posicion 2 corresponde al nombre del archivo
+   //var splitter = allfile.split("\n");
    var map = [];
    var fileboxes = [];
-   splitter.pop();
+   //splitter.pop();
+   splitter.shift();
+   splitter.shift();
 
    for(var i = 0; i < splitter.length; i++){
       if(splitter[i].length!=3){
