@@ -1,7 +1,11 @@
 # SOKO
 Basic AI agent for a Sokoban game
 
-For execute
+For execute in Normal
 ```
-$ node sokoban.js nivel.txt
+$ node sokoban_*.js nivel.txt
+```
+For execute in Deploy
+```
+$ ./run.sh < nivel.txt
 ```
